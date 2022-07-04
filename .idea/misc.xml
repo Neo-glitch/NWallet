@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Kotlin Apps/NWallet/app/src/main/res/drawable/ic_bitcoin.xml" value="0.1" />
+        <entry key="..\:/Android Kotlin Apps/NWallet/app/src/main/res/drawable/ic_onboarding_1.xml" value="0.1" />
+        <entry key="..\:/Android Kotlin Apps/NWallet/app/src/main/res/drawable/ic_onboarding_2.xml" value="0.1" />
+        <entry key="..\:/Android Kotlin Apps/NWallet/app/src/main/res/drawable/ic_onboarding_3.xml" value="0.1" />
         <entry key="..\:/Android Kotlin Apps/NWallet/app/src/main/res/layout/activity_main.xml" value="0.13333333333333333" />
       </map>
     </option>

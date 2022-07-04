@@ -10,7 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.neo.nwallet.navigation.NWalletNavigation
+import com.neo.nwallet.navigation.NWalletScreens
 import com.neo.nwallet.ui.theme.NWalletTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,26 +21,32 @@ class MainActivity : ComponentActivity() {
         setContent {
             NWalletTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+                NWalletApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun NWalletApp(){
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+//        val hasSeen = true
+
+        NWalletNavigation(startDestination = NWalletScreens.OnBoardingScreen.name)
+    }
+
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview2() {
     NWalletTheme {
-        Greeting("Android")
+        NWalletApp()
     }
 }
