@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -39,7 +40,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 @Preview(showBackground = true)
-fun OnBoardingScreen(navController: NavHostController = rememberNavController()) {
+fun OnBoardingScreen(
+    navController: NavHostController = rememberNavController(),
+    viewModel: OnBoardingViewModel = hiltViewModel()
+) {
 
     val onBoardingItems = OnBoardingItem.getOnBoardingItems()
     val pagerState = rememberPagerState()
@@ -64,19 +68,25 @@ fun OnBoardingScreen(navController: NavHostController = rememberNavController())
 
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 30.dp, vertical = 10.dp)
+                    .padding(horizontal = 50.dp, vertical = 10.dp)
                     .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceAround,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 BottomContent(pagerState = pagerState) {
                     if (pagerState.currentPage != 2)
                         scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-                    else
-                        navController.navigate(NWalletScreens.HomeScreen.name){
-                            popUpTo(0)
+                    else{
+                        scope.launch {
+                            viewModel.setHasSeen(true)
+                            navController.navigate(NWalletScreens.HomeScreen.name){
+                                popUpTo(0)
+                            }
                         }
+                    }
+
+
                 }
 
             }
@@ -118,7 +128,7 @@ fun PagerContent(item: OnBoardingItem) {
             text = item.description,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 2.dp, start = 8.dp, end= 8.dp),
+                .padding(top = 2.dp, start = 8.dp, end = 8.dp),
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Light,
@@ -145,7 +155,7 @@ inline fun BottomContent(pagerState: PagerState, crossinline onTextButtonClicked
         modifier = Modifier.clickable {onTextButtonClicked.invoke()},
         text = if (pagerState.currentPage != 2) "Next" else "Get Started",
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
+        fontSize = 16.sp,
         color = MaterialTheme.colors.secondary
     )
 }
