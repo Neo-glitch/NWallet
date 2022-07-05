@@ -34,17 +34,27 @@ import androidx.core.view.WindowCompat
 import com.neo.nwallet.R
 import com.neo.nwallet.screens.main.MainActivity
 import com.neo.nwallet.ui.theme.NWalletTheme
+import com.neo.nwallet.utils.Constants
+import com.neo.nwallet.utils.PreferenceDataStore
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
+    @Inject lateinit var preferenceDataStore: PreferenceDataStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             hideSystemUI()
             NWalletTheme {
                 // A surface container using the 'background' color from the theme
-                SplashScreen(){
-                    startActivity(Intent(this, MainActivity::class.java))
+
+                SplashScreen(preferenceDataStore){
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra(Constants.HAS_SEEN_ONBOARDING, it)
+                    startActivity(intent)
                     finish()
                 }
             }
@@ -64,18 +74,22 @@ class SplashActivity : ComponentActivity() {
             }
         }
     }
+
+
 }
 
 
 @Composable
-inline fun SplashScreen(crossinline goToMainActivity: () -> Unit) {
+inline fun SplashScreen(preferenceDataStore: PreferenceDataStore, crossinline goToMainActivity: (Boolean) -> Unit) {
     val state = remember { MutableTransitionState(false) }
+    val hasSeen = preferenceDataStore.getHasSeenOnboarding.collectAsState(initial = false)
 
     LaunchedEffect(true) {
         delay(500L)
         state.targetState = true
         delay(3000L)
-        goToMainActivity.invoke()
+
+        goToMainActivity.invoke(hasSeen.value)
     }
 
     Surface(
@@ -144,7 +158,7 @@ inline fun SplashScreen(crossinline goToMainActivity: () -> Unit) {
 @Composable
 fun DefaultPreview() {
     NWalletTheme {
-        SplashScreen { }
+//        SplashScreen() { }
 
     }
 }
